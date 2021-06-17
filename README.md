@@ -47,3 +47,7 @@ def deps do
   ]
 end
 ```
+
+---------------------------------------------------
+
+Image Attribution: "Braille F" by Joel Wisneski from the [Noun Project](https://thenounproject.com/)
