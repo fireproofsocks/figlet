@@ -1,13 +1,15 @@
 defmodule Figlet.Parser.ChardataParse do
   @moduledoc """
-  This module focuses on parsing character data from Figlet files.
-  http://www.jave.de/figlet/figfont.html#figcharacterdata
+  This module focuses on parsing [character data](http://www.jave.de/figlet/figfont.html#figcharacterdata)
+  from Figlet files.
 
   ## FIGcharacter Data
+
   The FIGcharacter data begins on the next line after the comments and continues
   to the end of the file.
 
   ## Basic Data Structure
+
   The sub-characters in the file are given exactly as they should be output, with
   two exceptions:
 
@@ -28,7 +30,4 @@ defmodule Figlet.Parser.ChardataParse do
   def reqd_codepoints do
     Stream.concat(32..126, [196, 214, 220, 228, 246, 252, 223])
   end
-
-  # def parse(line, ) do
-  # end
 end

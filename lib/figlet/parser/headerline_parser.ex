@@ -36,7 +36,7 @@ defmodule Figlet.Parser.HeaderlineParser do
   }
 
   @doc """
-
+  Parses the headerline (provided as a string binary).
   """
   @spec parse(header_line :: binary, opts :: keyword()) :: {:ok, Meta.t()} | {:error, binary()}
   def parse(header_line, opts \\ [])

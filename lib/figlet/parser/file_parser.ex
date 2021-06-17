@@ -1,12 +1,8 @@
 defmodule Figlet.Parser.FileParser do
   @moduledoc """
   This module parses figlet files.
-  How the files are read (e.g. in whole or streamed) is an implementation detail.
-
-
-  Figlet font file format spec:
-  http://www.jave.de/docs/figfont.txt
-  https://github.com/Marak/asciimo/issues/3
+  How the files are read (e.g. in whole or streamed) is considered an implementation
+  detail: the input to the function here is just the path to the file.
 
   A FIGlet file has 3 main parts:
 
@@ -17,6 +13,7 @@ defmodule Figlet.Parser.FileParser do
 
 
   ## [FIGcharacter Data](http://www.jave.de/figlet/figfont.html#figcharacterdata)
+
   The FIGcharacter data begins on the next line after the comments and continues
   to the end of the file.
 
@@ -32,6 +29,14 @@ defmodule Figlet.Parser.FileParser do
   sub-characters when the font is read in. By convention, the last line of a
   FIGcharacter has two endmarks, while all the rest have one. This makes it easy
   to see where FIGcharacters begin and end. No line should have more than two endmarks.
+
+  ## See Also
+
+  Building a parser for Figlet files would be practically impossible without a useful spec for
+  reference. Relevant links for the Figlet font file spec:
+
+  - http://www.jave.de/docs/figfont.txt
+  - https://github.com/Marak/asciimo/issues/3
   """
 
   alias Figlet.{Char, Font, Meta}
@@ -58,6 +63,8 @@ defmodule Figlet.Parser.FileParser do
   def parse(filepath, opts \\ [])
 
   def parse(filepath, _opts) when is_binary(filepath) do
+    Logger.metadata(font: filepath)
+
     case File.exists?(filepath) do
       true ->
         filepath
@@ -71,9 +78,10 @@ defmodule Figlet.Parser.FileParser do
       false ->
         {:error, "File not found: #{inspect(filepath)}"}
     end
+  rescue
+    error in Figlet.Parser.FileParser.Error -> {:error, "#{filepath}: #{inspect(error)}"}
   end
 
-  #
   # acc: {<task>, tmp_acc, %Font{}, line_i}
   # acc: {:comments, tmp_acc, font, line_i}
   defp parse_line(header, {:headerline, font}) do
@@ -107,7 +115,6 @@ defmodule Figlet.Parser.FileParser do
   end
 
   # After the comments, accumulate the chardata
-  # acc: {:chardata, tmp_acc, font, codepoint, rem_codepoints, line_i}
   # http://www.jave.de/figlet/figfont.html#figcharacterdata
   defp parse_line(
          line,
@@ -140,11 +147,7 @@ defmodule Figlet.Parser.FileParser do
   end
 
   # TODO: ad-hoc chars
-  # defp parse_line(_line, {:chardata, tmp_acc, font, codepoint, [], 1}) do
-  # defp parse_line(_line, {:chardata, _tmp_acc, font, _codepoint, [], _}) do
   defp parse_line(_line, acc) do
-    # IO.puts("DONE")
-    # nil
     acc
   end
 

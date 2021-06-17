@@ -1,10 +1,13 @@
 defmodule Figlet.MixProject do
   use Mix.Project
 
+  @version "0.1.0"
+
   def project do
     [
       app: :figlet,
-      version: "0.1.0",
+      description: description(),
+      version: @version,
       elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
       deps: deps()
@@ -16,6 +19,12 @@ defmodule Figlet.MixProject do
     [
       extra_applications: [:logger]
     ]
+  end
+
+  defp description do
+    """
+    An Elixir implementation of Figlets: lets you write huge ASCII letters!
+    """
   end
 
   # Run "mix help deps" to learn about dependencies.
