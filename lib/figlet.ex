@@ -20,15 +20,15 @@ defmodule Figlet do
   (Please note that the formatting inside the docs may not be accurate)
 
   Inspired by [patorjk's Text to ASCII Art Generator](http://patorjk.com/software/taag/). Thanks `patorjk`!
-  See https://github.com/patorjk/figlet-cli
-  https://github.com/patorjk/figlet.js
+  See <https://github.com/patorjk/figlet-cli> and
+  <https://github.com/patorjk/figlet.js>
   """
 
-  alias Figlet.Parser.FileParser, as: Parser
+  alias Figlet.Parser.FontFileParser
 
   @horizontal_layouts [:default, :full, :fitted, :controlled_smushing, :universal_smushing]
   @vertical_layouts [:default, :full, :fitted, :controlled_smushing, :universal_smushing]
-  @default_font "priv/ours/banner.flf"
+  @default_font "ours/banner.flf"
   @default_horizontal_layout :default
   @default_vertical_layout :default
   @default_width 80
@@ -41,6 +41,8 @@ defmodule Figlet do
     whitespace_break: @default_whitespace_break
   ]
 
+  @fonts_dir [__DIR__, "..", "fonts"] |> Path.join() |> Path.expand()
+
   @doc """
   Prints text in all available fonts.
 
@@ -49,7 +51,7 @@ defmodule Figlet do
       iex> Figlet.demo("Foo")
       ...
 
-      priv/figlet.js/Modular.flf
+      fonts/figlet.js/Modular.flf
       _______  _______  _______
       |       ||       ||       |
       |    ___||   _   ||   _   |
@@ -57,7 +59,7 @@ defmodule Figlet do
       |    ___||  |_|  ||  |_|  |
       |   |    |       ||       |
       |___|    |_______||_______|
-      priv/figlet.js/Roman.flf
+      fonts/figlet.js/Roman.flf
       oooooooooooo
       `888'     `8
       888          .ooooo.   .ooooo.
@@ -71,8 +73,9 @@ defmodule Figlet do
   def demo(text) do
     with {:ok, fonts} <- list_fonts() do
       Enum.each(fonts, fn font ->
-        IO.puts(font)
+        font |> Path.relative_to(@fonts_dir) |> IO.puts()
         text(text, font: font)
+        IO.puts("")
       end)
     end
   end
@@ -82,15 +85,16 @@ defmodule Figlet do
 
   ## Options
 
-      - `font`: string path to font file, e.g. `#{@default_font}`,
-      - `horizontal_layout`: default: `#{@default_horizontal_layout}`
-      - `vertical_layout`: default: `#{@default_vertical_layout}`
-      - `width`: integer character screen width, default: `#{@default_width}`,
-      - `whitespace_break`: default: `#{@default_whitespace_break}`
+  - `font`: string path to font file, e.g. `#{@default_font}`. Relative paths are
+    interpretted as relative to this package's `fonts/` directory.
+  - `horizontal_layout`: default: `#{@default_horizontal_layout}`
+  - `vertical_layout`: default: `#{@default_vertical_layout}`
+  - `width`: integer character screen width, default: `#{@default_width}`,
+  - `whitespace_break`: default: `#{@default_whitespace_break}`
 
   ## Examples
 
-      iex> Figlet.text("Jump Street", font: "priv/ours/ivrit.flf")
+      iex> Figlet.text("Jump Street", font: "ours/ivrit.flf")
             _                                 ____    _                          _
            | |  _   _   _ __ ___    _ __     / ___|  | |_   _ __    ___    ___  | |_
         _  | | | | | | | '_ ` _ \  | '_ \    \___ \  | __| | '__|  / _ \  / _ \ | __|
@@ -102,7 +106,8 @@ defmodule Figlet do
     {:ok, font} =
       opts
       |> Keyword.get(:font, @default_font)
-      |> Parser.parse()
+      |> make_absolute()
+      |> FontFileParser.parse()
 
     charlist = String.to_charlist(input)
 
@@ -121,35 +126,44 @@ defmodule Figlet do
 
   ## Examples
 
-      iex> Figlet.font("priv/figlet.js/Alpha.flf")
+      iex> Figlet.font("figlet.js/Alpha.flf")
   """
   def font(path) do
-    Parser.parse(path)
+    path
+    |> make_absolute()
+    |> FontFileParser.parse()
   end
 
   @doc """
   Show the fonts currently included with this package.
+  Fonts are identified by their relative paths.
 
   ## Examples
 
       iex> Figlet.list_fonts()
       {:ok,
-        ["priv/contributed/nipples.flf", ...]
+        ["contributed/nipples.flf", ...]
   """
   @spec list_fonts :: {:ok, list} | {:error, any()}
   def list_fonts do
-    "priv"
+    @fonts_dir
     |> ls_files_r()
     |> case do
-      {:ok, func} -> {:ok, Enum.to_list(func)}
-      {:error, error} -> {:error, error}
+      {:ok, dir_contents} ->
+        {:ok,
+         dir_contents
+         |> Enum.map(fn f -> Path.relative_to(f, @fonts_dir) end)
+         |> Enum.to_list()}
+
+      {:error, error} ->
+        {:error, error}
     end
   end
 
   def ls_files_r(filepath) when is_binary(filepath) do
     case File.dir?(filepath) do
       true -> {:ok, expand(File.ls(filepath), filepath)}
-      false -> {:error, :enotdir}
+      false -> {:error, "#{filepath} is not a directory"}
     end
   end
 
@@ -161,4 +175,7 @@ defmodule Figlet do
 
   # Here is a file (ls of a file will cause an error, so we return its path)
   defp expand({:error, _}, path), do: [path]
+
+  defp make_absolute("/" <> _ = filepath), do: Path.expand(filepath)
+  defp make_absolute(filepath), do: Path.expand(filepath, @fonts_dir)
 end

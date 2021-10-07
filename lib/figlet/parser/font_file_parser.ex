@@ -1,8 +1,6 @@
-defmodule Figlet.Parser.FileParser do
+defmodule Figlet.Parser.FontFileParser do
   @moduledoc """
-  This module parses figlet files.
-  How the files are read (e.g. in whole or streamed) is considered an implementation
-  detail: the input to the function here is just the path to the file.
+  This module parses figlet font files identified by the path to the file.
 
   A FIGlet file has 3 main parts:
 
@@ -18,6 +16,7 @@ defmodule Figlet.Parser.FileParser do
   to the end of the file.
 
   ## Basic Data Structure
+
   The sub-characters in the file are given exactly as they should be output, with
   two exceptions:
 
@@ -50,13 +49,13 @@ defmodule Figlet.Parser.FileParser do
   end
 
   @doc """
-  Parses the Figlet font file at the given `filepath`, returning a `%Figlet.Font{}`
+  Parses the Figlet font file at the given absolute `filepath`, returning a `%Figlet.Font{}`
   struct.
 
   Given:
-  flf2a 4 3 8 15 11 0 10127
+  `flf2a 4 3 8 15 11 0 10127`
 
-  The 6th character (after the a) is a unicode value for "hardBlank"
+  The 6th character (the invisible one after the `a`) is a unicode value for "hardBlank"
 
   All FIGlet fonts must contain chars 32-126, 196, 214, 220, 228, 246, 252, 223
   """
