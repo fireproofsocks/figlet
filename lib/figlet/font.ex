@@ -17,7 +17,7 @@ defmodule Figlet.Font do
           source: binary(),
           meta: Meta.t(),
           comments: binary(),
-          char_map: map(),
+          char_map: %{optional(integer) => Figlet.Char.t()},
           is_valid?: boolean()
         }
 

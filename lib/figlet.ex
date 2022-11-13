@@ -41,10 +41,10 @@ defmodule Figlet do
     whitespace_break: @default_whitespace_break
   ]
 
-  @fonts_dir [__DIR__, "..", "fonts"] |> Path.join() |> Path.expand()
+  @fonts_dir Application.app_dir(:figlet, ["priv", "fonts"])
 
   @doc """
-  Prints text in all available fonts.
+  Prints the given text in all available fonts.
 
   ## Examples
 

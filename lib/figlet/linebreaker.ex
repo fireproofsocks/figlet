@@ -43,16 +43,9 @@ defmodule Figlet.Linebreaker do
           {:ok, list()} | {:error, any()}
   def split(charlist, font, width, opts \\ [])
 
-  def split(charlist, font, width, opts)
+  def split(charlist, _font, width, _opts)
       when is_list(charlist) and is_integer(width) and width > 0 do
-    # tuples = associate(charlist, font)
-
     {:ok, []}
-  end
-
-  defp parse([], acc), do: acc
-
-  defp parse([h | tail], acc) do
   end
 
   # turn the charlist into tuples: {codepoint, length}
@@ -69,7 +62,7 @@ defmodule Figlet.Linebreaker do
   ["this", "is", "a", "big", "old", "test"]
   ["this", "is", "a", "big-", "old", "test"]
   """
-  def chunkify(charlist, breakables) do
+  def chunkify(charlist, _breakables) do
     charlist
     |> Enum.reduce(
       [],
@@ -77,7 +70,7 @@ defmodule Figlet.Linebreaker do
         codepoint, [] ->
           [codepoint]
 
-        {codepoint, length}, acc ->
+        {_codepoint, _length}, _acc ->
           nil
       end
     )

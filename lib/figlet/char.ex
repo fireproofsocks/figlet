@@ -33,14 +33,10 @@ defmodule Figlet.Char do
   @type t :: %__MODULE__{
           codepoint: integer(),
           width: integer(),
-          slices: map()
+          slices: %{optional(integer) => String.t()}
         }
 
   defstruct codepoint: nil,
             width: nil,
             slices: %{}
-
-  # def put_slice(%__MODULE__{} = char, line_i, data) do
-  #   update_in(char.slices, fn slices -> Map.put(slices, line_i, data) end)
-  # end
 end

@@ -6,7 +6,7 @@ Based on the work of Patrick Gillespie for [Javascript Figlet](https://github.co
 
 ## Example
 
-```
+```elixir
 iex> Figlet.text("Rad", font: "priv/figlet.js/Alpha.flf")
           _____                    _____                    _____
          /\    \                  /\    \                  /\    \

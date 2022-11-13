@@ -1,7 +1,7 @@
 defmodule Figlet.MixProject do
   use Mix.Project
 
-  @version "0.2.0"
+  @version "0.3.0"
   @source_url "https://github.com/fireproofsocks/figlet"
 
   def project do
@@ -46,7 +46,7 @@ defmodule Figlet.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ex_doc, "~> 0.24.0", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.29.0", only: :dev, runtime: false}
     ]
   end
 
