@@ -1,7 +1,7 @@
 defmodule Figlet.MixProject do
   use Mix.Project
 
-  @version "0.3.0"
+  @version "0.3.1"
   @source_url "https://github.com/fireproofsocks/figlet"
 
   def project do
@@ -62,8 +62,7 @@ defmodule Figlet.MixProject do
         "mix.exs",
         "README*",
         "CHANGELOG*",
-        "LICENSE*",
-        "fonts/*"
+        "LICENSE*"
       ]
     ]
   end
