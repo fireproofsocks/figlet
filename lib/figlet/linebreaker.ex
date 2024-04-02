@@ -16,10 +16,10 @@ defmodule Figlet.Linebreaker do
   # # a line break may follow these characters, but they are not replaced
   # @breakables [?-]
 
-  @breakables %{
-    ?\s => :replace,
-    ?- => :keep
-  }
+  # @breakables %{
+  #   ?\s => :replace,
+  #   ?- => :keep
+  # }
   @doc """
 
   Any newlines included in the input `charlist` will cause a hard break.
