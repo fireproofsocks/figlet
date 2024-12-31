@@ -26,20 +26,20 @@ defmodule Figlet do
 
   alias Figlet.Parser.FontFileParser
 
-  @horizontal_layouts [:default, :full, :fitted, :controlled_smushing, :universal_smushing]
-  @vertical_layouts [:default, :full, :fitted, :controlled_smushing, :universal_smushing]
+  # @horizontal_layouts [:default, :full, :fitted, :controlled_smushing, :universal_smushing]
+  # @vertical_layouts [:default, :full, :fitted, :controlled_smushing, :universal_smushing]
   @default_font "ours/banner.flf"
   @default_horizontal_layout :default
   @default_vertical_layout :default
   @default_width 80
   @default_whitespace_break true
 
-  @defaults [
-    font: @default_font,
-    horizontal_layout: @default_horizontal_layout,
-    vertical_layout: @default_vertical_layout,
-    whitespace_break: @default_whitespace_break
-  ]
+  # @defaults [
+  #   font: @default_font,
+  #   horizontal_layout: @default_horizontal_layout,
+  #   vertical_layout: @default_vertical_layout,
+  #   whitespace_break: @default_whitespace_break
+  # ]
 
   @fonts_dir Application.app_dir(:figlet, ["priv", "fonts"])
 

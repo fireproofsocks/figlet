@@ -48,6 +48,12 @@ defmodule Figlet.Parser.FontFileParser do
     defexception message: "parser error"
   end
 
+  if Version.compare(System.version(), "1.16.0") in [:gt, :eq] do
+    defp stream_file!(path, line_or_bytes_modes), do: File.stream!(path, line_or_bytes_modes)
+  else
+    defp stream_file!(path, line_or_bytes), do: File.stream!(path, [], line_or_bytes)
+  end
+
   @doc """
   Parses the Figlet font file at the given absolute `filepath`, returning a `%Figlet.Font{}`
   struct.
@@ -67,7 +73,7 @@ defmodule Figlet.Parser.FontFileParser do
     case File.exists?(filepath) do
       true ->
         filepath
-        |> File.stream!([], :line)
+        |> stream_file!(:line)
         |> Enum.reduce({:headerline, %Font{source: filepath}}, &parse_line/2)
         |> case do
           {:chardata, _, font, _, _} -> {:ok, font}
