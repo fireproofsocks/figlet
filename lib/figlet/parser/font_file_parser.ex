@@ -84,7 +84,7 @@ defmodule Figlet.Parser.FontFileParser do
         {:error, "File not found: #{inspect(filepath)}"}
     end
   rescue
-    error in Figlet.Parser.FileParser.Error -> {:error, "#{filepath}: #{inspect(error)}"}
+    error in Figlet.Parser.FontFileParser.Error -> {:error, "#{filepath}: #{inspect(error)}"}
   end
 
   # acc: {<task>, tmp_acc, %Font{}, line_i}
